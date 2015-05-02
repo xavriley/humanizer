@@ -10,9 +10,9 @@ Optional input parameters (fractal exponent, standard deviation etc.) can be adj
 
 ##Further reading:
 
-  * H. Hennig, Synchronization in human musical rhythms and mutually interacting complex systems, PNAS 111, 12974-122979 (2014) [free download link]
-  * H. Hennig, R. Fleischmann, T. Geisel. Musical rhythms: The science of being slightly off. Physics Today 65, 64-65 (2012) [free download link]
-  * H. Hennig, R. Fleischmann, A. Fredebohm, Y. Hagmayer, A. Witt, J. Nagler, F. Theis and T. Geisel, The nature and perception of fluctuations in human musical rhythms, PloS ONE, 6, e26457 (2011) [free download link]
+  * [H. Hennig, Synchronization in human musical rhythms and mutually interacting complex systems, PNAS 111, 12974-122979 (2014)](http://www.nld.ds.mpg.de/~holgerh/articles/Hennig_2014_PNAS.pdf)
+  * [H. Hennig, R. Fleischmann, T. Geisel. Musical rhythms: The science of being slightly off. Physics Today 65, 64-65 (2012)](http://www.nld.ds.mpg.de/~holgerh/articles/Hennig_2012_phystoday.pdf)
+  * [H. Hennig, R. Fleischmann, A. Fredebohm, Y. Hagmayer, A. Witt, J. Nagler, F. Theis and T. Geisel, The nature and perception of fluctuations in human musical rhythms, PloS ONE, 6, e26457 (2011)](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0026457)
 
 ## Getting started
 
