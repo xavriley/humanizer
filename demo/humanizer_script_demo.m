@@ -1,3 +1,4 @@
+addpath('../');
 %% Run demo: Humanizing the song Billie Jean
 % the demo folder is part of the Humanizer package and contains
 % humanizer_script_demo.m
@@ -8,7 +9,7 @@
 
 %% enter path to demo folder
 % The Humanizer will write the humanized song (and if verbose=1 also other files) into the demo folder
-cd /Users/holgerh/mpi/anw/matlab/humanizer/demo
+cd /Users/xavierriley/Projects/humanizer/demo
 
 % place mf2t and t2mf in your bin folder and add path to bin
 setenv('PATH',[getenv('PATH') ':/Users/holgerh/bin/'])

@@ -1,12 +1,13 @@
 # Some pseudo Ruby for humanizing rhythms
+require 'csv'
 require 'complex'
 
 # DFT and inverse.
-# 
-# Algorithm from 
+#
+# Algorithm from
 # 'Meyberg, Vachenauer: Hoehere Mathematik II, Springer Berlin, 1991, page 332'
 #
-# See http://blog.mro.name/2011/04/simple-ruby-fast-fourier-transform/ 
+# See http://blog.mro.name/2011/04/simple-ruby-fast-fourier-transform/
 #
 def fft!(src, doinverse = false)
   # raise ArgumentError.new "Expected array input but was '#{src.class}'" unless src.kind_of? Array
@@ -23,9 +24,9 @@ def fft!(src, doinverse = false)
 
   # build a sine/cosine table
   wt = Array.new n2
-  wt.each_index {|i| 
+  wt.each_index {|i|
     wt[i] = Complex(Math.cos(i * phi),
-                    Math.sin(i * phi)) 
+                    Math.sin(i * phi))
   }
 
   # bit reordering
@@ -72,7 +73,7 @@ def stddev(a)
   Math.sqrt(distance/a.length)
 end
 
-# generate 1/f^alpha noise with N data points. 
+# generate 1/f^alpha noise with N data points.
 def noise(alpha=1, n=1000.0, seed=(1e6*rand).floor, verbose=1)
   # n phases and n amplitudes result in 2*n real data points x(t) after FFT.
   nn = (n/2.0).ceil
@@ -92,7 +93,7 @@ def noise(alpha=1, n=1000.0, seed=(1e6*rand).floor, verbose=1)
   amp = s.map {|val| Math.sqrt(val) }
   y = amp.map {|val| val * Math.exp(1.0i * phi) }
 
-  # symmetrize Y(N-k+2)) = conj(Y(k)) for k=2...N. 
+  # symmetrize Y(N-k+2)) = conj(Y(k)) for k=2...N.
   yy = [y, 0, y[1..-1].map(&:conj).reverse].flatten
   x = fft!(yy, true) # inverse FFT
   x = x[0..nn]  # for odd N we generated N+1 data points.
@@ -101,7 +102,7 @@ def noise(alpha=1, n=1000.0, seed=(1e6*rand).floor, verbose=1)
   x_stddev = stddev(x)
   x = x.map {|val| val/x_stddev }
 
-  if verbose > 0.5 
+  if verbose > 0.5
     puts printf('Generated 1/f^alpha noise with alpha=%2.1f\n',alpha)
   end
 
@@ -109,14 +110,14 @@ def noise(alpha=1, n=1000.0, seed=(1e6*rand).floor, verbose=1)
 end
 
 def humanizer(input_filename, sigma=10, alpha=1, type=2,
-                seed=(1e6*rand).floor, verbose=1, sigma2=sigma, 
+                seed=(1e6*rand).floor, verbose=1, sigma2=sigma,
                 alpha2=alpha, w=0.5)
 
   # get notes and times
   # get 'tatum' - smallest possible deviation
 
   # should be no. of notes
-  len_humanize = 510
+  len_humanize = (2048 - 2)
 
   case type
   when 0
@@ -125,17 +126,57 @@ def humanizer(input_filename, sigma=10, alpha=1, type=2,
     # group humanize
   when 2
     # solo humanize
-    x = noise(alpha, len_humanize, seed).map {|val | 
-      val * (sigma/1000.0)
+    x = noise(alpha, len_humanize, seed).map {|val |
+      val.real * (sigma/1000.0)
     }
     # because correlations in x and y shall be identical here (but stddev can differ)!
     y = x.map {|val|
-      val * (sigma2/1000.0)
+      val.real * (sigma2/1000.0)
     }
   else
   end
 
-  [x,y]
+  # renormalize deviations (except for exact version)
+  if type != 0
+
+      # don't modify the first beat!
+      x[0] = 0;
+      y[0] = 0;
+
+      # reduce rare large changes in the deviations (outside 2*sigma) by factor of 2
+      xcounter = 0;
+      ycounter = 0;
+      x[1..-1].each do |kk|
+        if (x[kk] - x[kk-1]).abs > (2.0 * sigma/1000.0)
+          x[kk] = (( x[kk] + x[kk-1] ) / 2.0)
+          xcounter = xcounter + 1;
+        end
+      end
+
+      y[1..-1].each do |kk|
+        if (y[kk] - y[kk-1]).abs > (2.0 * sigma2/1000.0)
+          y[kk] = (( y[kk] + y[kk-1] ) / 2.0)
+          ycounter = ycounter + 1;
+        end
+      end
+
+      # set standard deviation to 1
+      x_stddev = stddev(x)
+      x = x.map {|val| val/x_stddev * sigma/1000.0 }
+
+      y_stddev = stddev(y)
+      y = y.map {|val| val/y_stddev * sigma2/1000.0 }
+  end
+
+  x.zip(y)
 end
 
-puts humanizer('foo').inspect
+class CSV
+  def CSV.unparse array
+    CSV.generate do |csv|
+      array.each { |i| csv << i }
+    end
+  end
+end
+
+puts CSV.unparse(humanizer('foo'))

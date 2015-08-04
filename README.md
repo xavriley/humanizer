@@ -1,4 +1,4 @@
-# Humanizer (Matlab)
+# Humanizer (Matlab / GNU Octave)
 
 ## Introdution: What is the Humanizer?
 The Humanizer reads a MIDI or text file, modifies the delays of the beats, and writes a humanized midi file to disk. The beats are modified such that the timing reflects the generic play of humans. The Humanizer only reproduces the generic timing of humans and does not cover delays or other features that are introduced by musicians by intention e.g. to interpret a musical piece. The purpose of the research behind the Humanizer is to help understanding how human synchonization, timing and perception of time works.
@@ -19,6 +19,17 @@ Optional input parameters (fractal exponent, standard deviation etc.) can be adj
   * Download `t2mf`, `mf2t` from http://code.google.com/p/midi2text/ (UNIX executables; License: GNU GPL v3)
   * Place UNIX executables t2mf and mf2t in your bin folder, e.g. /Users/myusername/bin
   * Run the demo file humanizer_script_demo.m in the demo folder
+
+### Using GNU Octave instead of MatLab
+
+The code can be run by a free, open-source equivalent of MatLab called [Octave](http://www.gnu.org/software/octave/).
+The installation process is not 100% straightforward on OS X but it can be made much nicer by using [Homebrew as described here](http://adampash.com/how-to-install-octave/).
+
+Once Octave is installed, the demo script (for example) can then be run with:
+
+```
+$ octave --no-gui humanizer_script_demo.m
+```
 
 ## Run your own project
 To run your own project: the only input file you'll need to adjust is humanizer_script.m.
