@@ -32,12 +32,16 @@ function noise(alpha=1, n=1000, seed=int(rand(1:1e6)), verbose=true)
   srand(seed)
 
   phi = rand(1:N)*2*pi
+  #my_rands = readcsv("/Users/xavierriley/Projects/humanizer/noise_rands.csv")
+  #phi = my_rands*2*pi
 	amp = sqrt(s)
 	y = amp.*exp(1im.*phi)
 
-  Y = [y,0,fliplr(conj(y[2:end]))]
-	x = ifft(Y)
-	x = x[1:N]
+  Y = [y,0,reverse(conj(y[2:end]))]
+
+	x = ifft(Y,1)
+	x = vec(x[1:n])
 
 	x = x/std(x);
+  real(x)
 end
